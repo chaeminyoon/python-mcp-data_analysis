@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files (optional - 사용자가 결정)
+*.csv
+*.xlsx
+*.xls
+
+# Generated files
+*.png
+*.jpg
+*.jpeg
+*.html
+*.pdf
+
+# Model files
+*.h5
+*.pkl
+*.joblib
+*.pt
+*.pth
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Temporary
+*.tmp
+temp/
+tmp/
+
+# MCP specific
+.mcp/
+
+# Node modules (if any)
+node_modules/
