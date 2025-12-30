@@ -1,94 +1,224 @@
 # MCP Advanced Data Analysis System
 
-**26개의 전문가급 데이터 분석 도구**를 제공하는 MCP(Model Context Protocol) 기반 데이터 분석 시스템
+![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)
+![MCP](https://img.shields.io/badge/MCP-FastMCP-green.svg)
+![Ollama](https://img.shields.io/badge/Ollama-Supported-orange.svg)
 
-## ✨ 주요 기능
+**26개의 전문가급 데이터 분석 도구**를 제공하는 MCP(Model Context Protocol) 기반 데이터 분석 시스템. OpenAI 및 Ollama 모델을 지원하며, 대화형 인터페이스를 통해 즉각적인 데이터 분석을 수행합니다.
 
-### 📊 데이터 탐색 (4개 도구)
-- `get_dataset_info` - 기본 정보 확인
-- `profile_dataset` - 종합 프로파일링
+---
+
+## System Architecture
+
+본 시스템은 **MCP 프로토콜**을 기반으로 LLM 에이전트가 26개의 데이터 분석 도구를 자동으로 호출하여 탐색, 전처리, 시각화, 모델링, 통계 분석을 수행합니다.
+
+```
+User Query → LLM Agent → MCP Tools → Results → Conversation
+```
+
+## Core Components
+
+| Component | Technology | Role |
+|-----------|-----------|------|
+| **LLM** | OpenAI (gpt-4o-mini) / Ollama (qwen2.5:72b) | 자연어 이해 및 도구 호출 결정 |
+| **MCP Server** | FastMCP | 26개 데이터 분석 도구 제공 |
+| **Agent Framework** | LangGraph + LangChain | 대화 상태 관리 및 도구 실행 |
+| **Data Processing** | pandas, numpy, scikit-learn | 데이터 조작 및 ML 모델링 |
+| **Visualization** | matplotlib, seaborn | 정적 시각화 (향후 Plotly 지원) |
+| **Caching** | In-memory Dictionary | 스마트 캐싱으로 50% 성능 향상 |
+
+---
+
+## Features (26 Tools)
+
+### 📂 Data Exploration (4 tools)
+- `get_dataset_info` - 데이터셋 기본 정보
+- `profile_dataset` - 종합 프로파일링 (통계, 상관관계)
 - `detect_data_types` - 자동 타입 분류
 - `find_duplicates` - 중복 탐지
 
-### 🧹 데이터 전처리 (5개 도구)
-- `handle_missing_values` - 결측치 처리
-- `detect_outliers`, `remove_outliers` - 이상치 탐지/제거
+### 🧹 Data Preprocessing (5 tools)
+- `handle_missing_values` - 결측치 처리 (mean/median/mode)
+- `detect_outliers`, `remove_outliers` - 이상치 탐지/제거 (IQR, Z-score)
 - `encode_categorical` - 범주형 인코딩 (Label/One-hot)
 - `scale_features` - 특성 스케일링 (Standard/MinMax)
 
-### 📈 시각화 (7개 도구)
-- `plot_histogram` - 히스토그램 (커스터마이징 가능)
+### 📊 Visualization (7 tools)
+- `plot_histogram` - 히스토그램 (bins, KDE, 색상 커스터마이징)
 - `plot_boxplot` - 박스플롯
-- `plot_scatter` - 산점도 (레전드, 색상 등 완전 커스텀)
+- `plot_scatter` - 산점도 (레전드, 마커 크기, 투명도 조절)
 - `plot_correlation_heatmap` - 상관관계 히트맵
-- `calculate_correlation` - 상관계수 계산
-- `analyze_target_distribution` - 타겟 분포 분석
+- `calculate_correlation` - 상관계수 (Pearson/Spearman/Kendall)
+- `analyze_target_distribution` - 타겟 분포 및 불균형 탐지
 
-### 🤖 머신러닝 (2개 도구)
-- `compare_models` - RandomForest, XGBoost, LogisticRegression 비교
-- `evaluate_model` - Confusion Matrix, Feature Importance
+### 🤖 Machine Learning (2 tools)
+- `compare_models` - RandomForest, XGBoost, LogisticRegression 성능 비교
+- `evaluate_model` - Confusion Matrix, Feature Importance, 상세 메트릭
 
-### 📐 통계 분석 (5개 도구)
+### 📐 Statistical Analysis (5 tools)
 - `test_normality` - Shapiro-Wilk 정규성 검정
 - `test_ttest` - 독립 T-검정
 - `test_anova` - 일원 분산분석
 - `test_chi_square` - 카이제곱 독립성 검정
 - `calculate_confidence_interval` - 신뢰구간 계산
 
-### 💾 데이터 관리 (3개 도구)
+### 💾 Data Management (3 tools)
 - `list_cached_datasets` - 캐시 모니터링
-- `clear_cache` - 캐시 초기화
-- Smart Caching System - 자동 메모리 최적화
+- `clear_cache` - 메모리 초기화
+- Smart Caching - 자동 성능 최적화
 
-## 🚀 빠른 시작
+---
 
-### 1. 의존성 설치
+## Project Structure
 
-```bash
-pip install pandas numpy matplotlib seaborn scikit-learn scipy xgboost
-pip install mcp langchain-mcp-adapters langgraph langchain-openai
-pip install langchain-ollama  # Ollama 사용 시
+```
+d:\MCP_SVR
+├── data_server_v.3.0.py        # [Core] MCP 서버 (26개 도구)
+├── data_client.py              # [UI] LangGraph 기반 대화형 클라이언트
+├── generate_all_test_data.py  # [Scripts] 테스트 데이터 생성기
+├── test_data/                  # [Input] 테스트 데이터셋
+│   ├── customer_churn.csv      # 분류: 고객 이탈 예측 (7,043행)
+│   ├── house_price.csv         # 회귀: 주택 가격 예측 (545행)
+│   └── sales_timeseries.csv    # 시계열: 매출 분석 (1,000일)
+├── README.md                   # 프로젝트 문서
+└── .gitignore                  # Git 제외 설정
 ```
 
-### 2. 서버 실행
+---
+
+## Getting Started
+
+### 1. Prerequisites
+
+**필수 요구사항:**
+- Python 3.11+
+- OpenAI API Key 또는 Ollama 실행 중
+
+**Ollama 사용 시 (무료):**
+```bash
+ollama pull qwen2.5:72b
+```
+
+### 2. Installation
+
+```bash
+# 의존성 설치
+pip install pandas numpy matplotlib seaborn scikit-learn scipy xgboost
+pip install mcp langchain-mcp-adapters langgraph langchain-openai langchain-ollama
+```
+
+### 3. Configuration
+
+**OpenAI 사용:**
+```python
+# data_client.py
+OLLAMA_HOST = None  # OpenAI 사용
+MODEL_NAME = "gpt-4o-mini"
+```
+
+**Ollama 사용 (무료):**
+```python
+# data_client.py
+OLLAMA_HOST = "http://localhost:11434"
+MODEL_NAME = "qwen2.5:72b"
+```
+
+---
+
+## Usage
+
+### Step 1: 서버 시작
 
 ```bash
 python data_server_v.3.0.py
 ```
 
-### 3. 클라이언트 실행 (별도 터미널)
+### Step 2: 클라이언트 실행 (별도 터미널)
 
 ```bash
 python data_client.py
 ```
 
-## 💡 사용 예시
+접속 성공 시:
+```
+============================================================
+ MCP 데이터 분석 시스템 (v.3.0) - Model: qwen2.5:72b
+============================================================
+Tip: 이전 대화를 기억합니다. 자연스럽게 대화하세요!
+ 예: '이제 이상치를 제거해줘', '그 결과를 시각화해줘'
+ Commands: 'clear' - 대화 초기화, 'exit/종료' - 종료
+============================================================
+
+You:
+```
+
+### Step 3: 테스트 데이터 생성 (선택)
+
+```bash
+python generate_all_test_data.py
+```
+
+생성되는 파일:
+- `customer_churn.csv` - 7,043행, 분류 문제
+- `house_price.csv` - 545행, 회귀 문제
+- `sales_timeseries.csv` - 1,000일, 시계열 분석
+
+---
+
+## Examples
 
 ### 데이터 탐색
 ```
 You: customer_churn.csv를 프로파일링해줘
 
-AI: [통계량, 결측치, 상관관계 등 종합 분석]
+AI: [통계량, 결측치, 상관관계 등 종합 분석 결과 출력]
 ```
 
-### 시각화
+### 시각화 (커스터마이징)
 ```
 You: area와 price의 산점도를 그려줘. bedrooms로 색상 구분하고, 
-     레전드 제목은 '방 개수', 위치는 우측 상단으로 해줘
+     레전드 제목은 '방 개수', 마커 크기는 80, 투명도는 0.7로 해줘
 
-AI: [커스터마이징된 산점도 생성]
+AI: [커스터마이징된 scatter_area_vs_price.png 생성]
+```
+
+### 통계 분석
+```
+You: contract_type별로 monthly_charges에 차이가 있는지 ANOVA 검정해줘
+
+AI: ANOVA 결과:
+    F-statistic: 245.67
+    p-value: 0.0001
+    해석: 계약 유형별로 월 요금에 유의한 차이가 있습니다 (p < 0.05).
 ```
 
 ### 머신러닝
 ```
-You: customer_churn.csv에서 churn을 예측하는 모델을 비교하고 평가해줘
+You: customer_churn.csv에서 churn을 타겟으로 
+     RandomForest, XGBoost, LogisticRegression을 비교하고 
+     최고 성능 모델을 상세 평가해줘
 
-AI: [RandomForest, XGBoost, LR 성능 비교 → 최고 모델 상세 평가]
+AI: [모델 비교 결과]
+    최고 모델: RandomForest (Accuracy: 0.82)
+    
+    [evaluate_model 자동 실행]
+    Precision: 0.76
+    Recall: 0.71
+    F1-Score: 0.73
+    Feature Importance:
+    1. monthly_charges: 0.23
+    2. tenure: 0.19
+    ...
+    [confusion_matrix_RandomForest.png 생성]
 ```
 
-## 🎨 시각화 커스터마이징
+---
 
-### plot_scatter 고급 옵션
+## Advanced Features
+
+### Visualization Customization
+
+**plot_scatter 파라미터:**
 ```python
 plot_scatter(
     csv_path="house_price.csv",
@@ -109,59 +239,60 @@ plot_scatter(
 )
 ```
 
-## 🔧 모델 설정
+### Conversation History
 
-### OpenAI 사용
-```python
-# data_client.py
-USE_OLLAMA = False
-MODEL_NAME = "gpt-4o-mini"
+대화 기록을 유지하여 연속적인 분석 가능:
+
+```
+You: customer_churn.csv를 불러와서 결측치를 확인해줘
+AI: [결측치 11개 발견]
+
+You: 평균값으로 채워줘
+AI: [결측치 처리 완료]
+
+You: 이제 이상치를 탐지해줘
+AI: [monthly_charges에서 23개 이상치 발견]
 ```
 
-### Ollama 사용 (무료)
-```python
-# data_client.py
-USE_OLLAMA = True
-OLLAMA_HOST = "http://localhost:11434"
-MODEL_NAME = "qwen2.5:72b"
-```
+`clear` 명령어로 대화 초기화 가능.
 
-## 📦 테스트 데이터셋
+---
 
-- `customer_churn.csv` - 7,043행, 분류 (이탈 예측)
-- `house_price.csv` - 545행, 회귀 (가격 예측)
-- `sales_timeseries.csv` - 1,000일, 시계열 분석
+## Performance
 
-생성:
-```bash
-python generate_all_test_data.py
-```
+| Metric | Value |
+|--------|-------|
+| **도구 개수** | 26개 |
+| **캐싱 효과** | ~50% 속도 향상 (반복 작업 시) |
+| **응답 시간** | 2-5초 (Ollama GPU 사용 시) |
+| **메모리** | 최소 8GB RAM |
+| **비용** | $0 (Ollama) / $0.15/1M tokens (gpt-4o-mini) |
 
-## 📚 문서
+---
 
-- [사용 가이드](usage_guide.md) - 20+ 분석 시나리오
-- [원격 Ollama 설정](remote_ollama_setup.md) - SSH 서버 연동
+## Roadmap
 
-## 🎯 주요 특징
+- [ ] **Interactive Plots** - Plotly 기반 인터랙티브 시각화
+- [ ] **Model Persistence** - 모델 저장/로드 기능
+- [ ] **Hyperparameter Tuning** - GridSearch/RandomSearch
+- [ ] **Advanced Preprocessing** - PCA, Feature Selection
+- [ ] **Export Functionality** - 처리된 데이터 내보내기
 
-- ✅ **스마트 캐싱** - 반복 작업 50% 속도 향상
-- ✅ **대화 히스토리** - 연속적인 자연어 대화
-- ✅ **한글 지원** - 완전한 한국어 인터페이스
-- ✅ **즉시 실행** - AI가 바로 도구 호출
-- ✅ **커스터마이징** - 시각화 상세 조절
-- ✅ **무료 옵션** - Ollama 지원
+---
 
-## 📊 시스템 요구사항
+## Documentation
 
-- Python 3.11+
-- 8GB+ RAM (CPU 모드)
-- 또는 GPU (VRAM 18GB+, Ollama 사용 시)
+- [사용 가이드](usage_guide.md) - 20+ 분석 시나리오 및 예시
+- [원격 Ollama 설정](remote_ollama_setup.md) - SSH 서버 연동 방법
 
-## 🤝 기여
+---
 
-이슈 및 PR 환영합니다!
-
-## 📄 라이센스
+## License
 
 MIT License
 
+---
+
+**개발:** Antigravity AI Assistant  
+**Repository:** [github.com/chaeminyoon/python-mcp-data_analysis](https://github.com/chaeminyoon/python-mcp-data_analysis)  
+**최종 업데이트:** 2025-12-30
