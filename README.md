@@ -29,43 +29,64 @@ User Query → LLM Agent → MCP Tools → Results → Conversation
 
 ---
 
-## Features (26 Tools)
+## MCP Server Tools (26 Total)
 
-### 📂 Data Exploration (4 tools)
-- `get_dataset_info` - 데이터셋 기본 정보
-- `profile_dataset` - 종합 프로파일링 (통계, 상관관계)
-- `detect_data_types` - 자동 타입 분류
-- `find_duplicates` - 중복 탐지
+본 시스템은 **6개 모듈**로 구성된 26개의 전문가급 도구를 제공합니다.
 
-### 🧹 Data Preprocessing (5 tools)
-- `handle_missing_values` - 결측치 처리 (mean/median/mode)
-- `detect_outliers`, `remove_outliers` - 이상치 탐지/제거 (IQR, Z-score)
-- `encode_categorical` - 범주형 인코딩 (Label/One-hot)
-- `scale_features` - 특성 스케일링 (Standard/MinMax)
+### 📂 Module 1: Data Exploration & Profiling (4 tools)
 
-### 📊 Visualization (7 tools)
-- `plot_histogram` - 히스토그램 (bins, KDE, 색상 커스터마이징)
-- `plot_boxplot` - 박스플롯
-- `plot_scatter` - 산점도 (레전드, 마커 크기, 투명도 조절)
-- `plot_correlation_heatmap` - 상관관계 히트맵
-- `calculate_correlation` - 상관계수 (Pearson/Spearman/Kendall)
-- `analyze_target_distribution` - 타겟 분포 및 불균형 탐지
+| Tool | Description |
+|------|-------------|
+| `get_dataset_info` | 데이터셋 기본 정보 (shape, dtypes, 결측치) |
+| `profile_dataset` | 종합 프로파일링 (통계량, 상관관계, 분포) |
+| `detect_data_types` | 컬럼별 데이터 타입 자동 분류 |
+| `find_duplicates` | 중복 행 탐지 및 카운트 |
 
-### 🤖 Machine Learning (2 tools)
-- `compare_models` - RandomForest, XGBoost, LogisticRegression 성능 비교
-- `evaluate_model` - Confusion Matrix, Feature Importance, 상세 메트릭
+### 🧹 Module 2: Data Preprocessing (5 tools)
 
-### 📐 Statistical Analysis (5 tools)
-- `test_normality` - Shapiro-Wilk 정규성 검정
-- `test_ttest` - 독립 T-검정
-- `test_anova` - 일원 분산분석
-- `test_chi_square` - 카이제곱 독립성 검정
-- `calculate_confidence_interval` - 신뢰구간 계산
+| Tool | Description |
+|------|-------------|
+| `handle_missing_values` | 결측치 처리 (mean, median, mode, drop, ffill) |
+| `detect_outliers` | 이상치 탐지 (IQR, Z-score 방법) |
+| `remove_outliers` | 이상치 제거 또는 처리 |
+| `encode_categorical` | 범주형 변수 인코딩 (Label, One-hot) |
+| `scale_features` | 특성 스케일링 (StandardScaler, MinMaxScaler) |
 
-### 💾 Data Management (3 tools)
-- `list_cached_datasets` - 캐시 모니터링
-- `clear_cache` - 메모리 초기화
-- Smart Caching - 자동 성능 최적화
+### 📊 Module 3: Exploratory Data Analysis (7 tools)
+
+| Tool | Description |
+|------|-------------|
+| `plot_histogram` | 히스토그램 (bins, KDE, 색상, 레전드 커스터마이징) |
+| `plot_boxplot` | 박스플롯 (이상치 시각화) |
+| `plot_scatter` | 산점도 (레전드, 마커 크기, 투명도, 색상 팔레트) |
+| `plot_correlation_heatmap` | 상관관계 히트맵 |
+| `calculate_correlation` | 상관계수 계산 (Pearson, Spearman, Kendall) |
+| `analyze_target_distribution` | 타겟 변수 분포 분석 및 불균형 탐지 |
+
+### 🤖 Module 4: Machine Learning (2 tools)
+
+| Tool | Description |
+|------|-------------|
+| `compare_models` | RandomForest, XGBoost, LogisticRegression, SVM 성능 비교 |
+| `evaluate_model` | Confusion Matrix, Feature Importance, 상세 메트릭 평가 |
+
+### 📐 Module 5: Statistical Analysis (5 tools)
+
+| Tool | Description |
+|------|-------------|
+| `test_normality` | Shapiro-Wilk 정규성 검정 |
+| `test_ttest` | 독립 T-검정 (두 그룹 평균 비교) |
+| `test_anova`  | 일원 분산분석 (다중 그룹 비교) |
+| `test_chi_square` | 카이제곱 독립성 검정 (범주형 변수) |
+| `calculate_confidence_interval` | 신뢰구간 계산 (평균값 추정) |
+
+### 💾 Module 6: Data Management (3 tools)
+
+| Tool | Description |
+|------|-------------|
+| `list_cached_datasets` | 현재 캐시된 데이터셋 목록 조회 |
+| `clear_cache` | 메모리 캐시 전체 초기화 |
+| **Smart Caching** | 자동 DataFrame 캐싱 (~50% 성능 향상) |
 
 ---
 
@@ -270,29 +291,6 @@ AI: [monthly_charges에서 23개 이상치 발견]
 
 ---
 
-## Roadmap
-
-- [ ] **Interactive Plots** - Plotly 기반 인터랙티브 시각화
-- [ ] **Model Persistence** - 모델 저장/로드 기능
-- [ ] **Hyperparameter Tuning** - GridSearch/RandomSearch
-- [ ] **Advanced Preprocessing** - PCA, Feature Selection
-- [ ] **Export Functionality** - 처리된 데이터 내보내기
-
----
-
-## Documentation
-
-- [사용 가이드](usage_guide.md) - 20+ 분석 시나리오 및 예시
-- [원격 Ollama 설정](remote_ollama_setup.md) - SSH 서버 연동 방법
-
----
-
 ## License
 
 MIT License
-
----
-
-**개발:** Antigravity AI Assistant  
-**Repository:** [github.com/chaeminyoon/python-mcp-data_analysis](https://github.com/chaeminyoon/python-mcp-data_analysis)  
-**최종 업데이트:** 2025-12-30
